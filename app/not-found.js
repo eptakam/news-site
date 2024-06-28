@@ -1,3 +1,7 @@
+/*
+    ce composant s'affiche (est appele) si la page que l'on desire acceder n'est pas trouvée. Il est accessible via l'URL /not-found.
+*/
+
 export default function NotFoundPage() {
   return (
     <div id="error">

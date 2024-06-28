@@ -19,6 +19,7 @@ export default function NewsPage() {
 
         {/* au lieu d'utiliser les liens ci-dessus, nous allons utiliser les données de DUMMY_NEWS */}
         {DUMMY_NEWS.map((newsItem) => (
+          // newsItem : represente chaque element du tableau DUMMY_NEWS
           <li key={newsItem.id}>
             <Link href={`/news/${newsItem.slug}`}>
               <img 
