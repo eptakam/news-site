@@ -13,7 +13,7 @@
  */
 
 import NewsList from "@/components/news/news-list";
-import { getNewsForYear } from "@/lib/news";
+import { getAvailableNewsMonths, getNewsForYear, getNewsForYearAndMonth } from "@/lib/news";
 import { getAvailableNewsYears } from "@/lib/news";
 
 import Link from "next/link";
@@ -21,27 +21,67 @@ import Link from "next/link";
 export default function FilteredNewsPage({ params }) {
   const filter = params.filter; // filter : tableau de tous les segments de chemin correspondants (ex: ['2024'] pour /archive/2024)
 
-  const years = getAvailableNewsYears(); // on recupere les annees disponibles (tableau d'annees) grace a la fonction getAvailableNewsYears() qui se trouve dans le fichier news.js du dossier lib
-    
-  return (
-    <header id="archive-header">
-      <nav>
-        <ul>
-          {/* ici, nous allons lister toutes les annees disponibles (dummy-news.js) */}
-          {years.map((year) => (
-            <li key={year}>
-              <Link href={`/archive/${year}`}>{year}</Link>
-            </li>
-          ))}
-        </ul>
-      </nav>
-    </header>
-  );
+  // vu que filter est un tableau, nous pouvons acceder a ces elements via les index. mais attention car il peut avoir 'undefined' comme element si le tableau est vide.
+  // const selecteYear = filter ? filter[0] : undefined; // on recupere l'annee passee a l'url
 
-  // const news = getNewsForYear(filter); // on recupere tous les articles de l'annee passee a l'url
-  // return (
-  //   <>
-  //     <NewsList news={news} />
-  //   </>
-  // );
+  // ou plus simplement
+  const selectedYear = filter?.[0]; // on recupere l'annee passee a l'url
+  const selectedMonth = filter?.[1]; // on recupere le mois correspondant a l'annee passee a l'url
+
+  let news;
+  let links = getAvailableNewsYears(); // on recupere les annees disponibles (tableau d'annees) grace a la fonction getAvailableNewsYears() qui se trouve dans le fichier news.js du dossier lib
+
+  if (selectedYear && !selectedMonth) {
+    news = getNewsForYear(selectedYear); // on recupere tous les articles de l'annee passee a l'url
+    links = getAvailableNewsMonths(selectedYear); // on recupere les mois disponibles pour l'annee passee a l'url
+  }
+  
+  if (selectedYear && selectedMonth) {
+    news = getNewsForYearAndMonth(selectedYear, selectedMonth); // on recupere tous les articles de l'annee et du mois passee a l'url
+
+    links = []; // on ne veut pas afficher le lien de l'annee du mois selectionne
+  }
+
+  let newsContent = <p>No news found for the selected period!</p>;
+
+  // si on a des articles, on les affiche
+  if (news && news.length > 0) {
+    newsContent = <NewsList news={news} />;
+  }
+
+  // generer une erreur si le segment d'url apres '/archive' n'est pas correct
+  if (
+    (selectedYear && !getAvailableNewsYears().includes(+selectedYear)) ||
+    (selectedMonth && !getAvailableNewsMonths(selectedYear).includes(+selectedMonth))
+  ) {
+    throw new Error("Invalid filter value!");
+  } 
+
+  return (
+    <>
+      <header id="archive-header">
+        <nav>
+          <ul>
+            {/* 
+              ici, nous allons lister toutes les annees disponibles (dummy-news.js)
+              pour permettre aussi l'affichage des mois disponibles pour une annee donnee
+
+            */}
+
+            {/* garder a l'esprit qu'a ce niveau, links contient plutot les mois disponibles pour une annee donnee et non plus les annees comme au depart */}
+            {links.map((link) => {
+              const href = selectedYear ? `/archive/${selectedYear}/${link}` : `/archive/${link}`;
+
+              return (
+                <li key={link}>
+                  <Link href={href}>{link}</Link>
+                </li>
+              );
+            })}
+          </ul>
+        </nav>
+      </header>
+      {newsContent}
+    </>
+  );
 }
