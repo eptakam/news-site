@@ -4,6 +4,7 @@
 
 import { notFound } from "next/navigation";
 import { DUMMY_NEWS } from "@/dummy-news";
+import Link from "next/link";
 
 export default function NewsDetailPage({ params }) {
   // retrieve the news ID from the params object
@@ -21,7 +22,10 @@ export default function NewsDetailPage({ params }) {
   return (
     <article className="news-article">
       <header>
-        <img src={`/images/news/${newsItem.image}`} alt={newsItem.title} />
+        {/* rendre l'image cliquable en le wrappant avec <Link> pour afficher l'image en plein écran */}
+        <Link href={`/news/${newsItem.slug}/image`}>
+          <img src={`/images/news/${newsItem.image}`} alt={newsItem.title} />
+        </Link>
         <h1>{newsItem.title}</h1>
         <time dateTime={newsItem.date}>{newsItem.date}</time>
       </header>
