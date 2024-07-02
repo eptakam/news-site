@@ -12,15 +12,15 @@ export default async function NewsPage() {
     option 1 :
         utiliser le hook useEffect pour fetcher les donnees de la BD (client-side data fetching)
 
-    option 2 : meilleur option avec Next.js
+    option 2 : 
         utiliser la fonction fetch directement dans le composant pour fetcher les donnees de la BD (server-side data fetching)
         on utilise directement le async sur le composant NewsPage
         et on enleve le hook useEffect et le use client
 
-    option 3 : 
+    option 3 : Meilleur approche si tu es le proprietaire de la BD
         pourquoi utiliser un backend separe pour fetcher les donnees de la BD alors que nous pouvons le faire directement a partir de la source (BD)
 
-        pour cela, nous allons retirer le fichier data.db (BD physique) et le placer directement dans notre projet
+        pour cela, nous allons deplacer le fichier data.db (BD physique) et le placer directement dans notre projet
 
         puis executer 'npm install better-sqlite3' pour installer toutes les despendances necessaires pour interagir avec la BD
 
@@ -85,7 +85,7 @@ export default async function NewsPage() {
   // const news = await response.json(); 
 
   // option 3 : fetcher les donnees de la BD directement
-  const news = getAllNews(); // appeler la fonction getAllNews() de '../lib/news.js' pour fetcher les donnees de la BD
+  const news = await getAllNews(); // appeler la fonction getAllNews() de '../lib/news.js' pour fetcher les donnees de la BD
   
 
   return (
