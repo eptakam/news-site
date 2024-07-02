@@ -5,6 +5,10 @@
     nous allons creer un autre path dans notre dynamic path 'news/[slug]' ce path suivra la nomenclature suivante pour son nom: des parentheses suivi du nom de la route que l'on veut intercepter. et dans la parenthese, on mettra la description pour arriver au path (dossier) que l'on veut intercepter. par exemple si les deux dossiers sont dans le meme dossier cad au meme niveau, ce sera un '.' juste comme un import path. https://nextjs.org/docs/app/building-your-application/routing/intercepting-routes
 
     dans notre cas, nous voulons intercepter le path 'news/[slug]/image' pour afficher l'image de l'article de presse. ce sera donc 'news/[slug]/(.)image'
+
+    on peut remarquer que la page n'occupe pas tout l'espace et qu'elle n'est pas egalement supperposee a l'autre page.
+
+    pour resoudre ce probleme, nous allons creer un fichier layout.js dans le dossier components. car c'est le layout qui determine comment les pages sont affichees.
 */
 
 import { notFound } from "next/navigation";
@@ -27,10 +31,12 @@ export default function InterceptedImagePage({ params }) {
 
   return (
     <>
-      <h2>Intercepted Image Page</h2>
-      <div className="fullscreen-image">
-        <img src={`/images/news/${newsItem.image}`} alt={newsItem.title} />
-      </div>
+      <div className="modal-backdrop" />
+      <dialog className="modal" open>
+        <div className="fullscreen-image">
+          <img src={`/images/news/${newsItem.image}`} alt={newsItem.title} />
+        </div>
+      </dialog>
     </>
   );
 }
