@@ -10,14 +10,15 @@
 import { notFound } from "next/navigation";
 import { DUMMY_NEWS } from "@/dummy-news";
 
-
-export default function ImagePage({ params }) {
+export default function InterceptedImagePage({ params }) {
   const newsItemSlug = params.slug; // on recupere le slug (le path) de l'article de presse
 
   // identify the news item that we want to display
   // we use the .find() method to find the news item with the matching slug
   // newsItem : represent one news item (one object) from the DUMMY_NEWS array
-  const newsItem = DUMMY_NEWS.find((newsItem) => newsItem.slug === newsItemSlug);
+  const newsItem = DUMMY_NEWS.find(
+    (newsItem) => newsItem.slug === newsItemSlug
+  );
 
   // if the news item does not exist, we display the NewsNotFoundPage. to do that, we'll use the notFound() function from next/navigation that will call the NewsNotFoundPage component because it's in the same folder as this file and has not-found.js as its filename.
   if (!newsItem) {
@@ -25,8 +26,11 @@ export default function ImagePage({ params }) {
   }
 
   return (
-    <div className="fullscreen-image">
-      <img src={`/images/news/${newsItem.image}`} alt={newsItem.title} />
-    </div>
+    <>
+      <h2>Intercepted Image Page</h2>
+      <div className="fullscreen-image">
+        <img src={`/images/news/${newsItem.image}`} alt={newsItem.title} />
+      </div>
+    </>
   );
 }
