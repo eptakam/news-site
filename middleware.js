@@ -14,13 +14,12 @@ Les middlewares permettent de structurer une application en séparant les préoc
 
 import { NextResponse } from 'next/server';
 
-
-
 export function middleware(request) {
   console.log(request);
   return NextResponse.next();
 }
 
+// configure le middleware pour qu'il s'exécute uniquement pour les requêtes dirigées vers le chemin /news
 export const config = {
   matcher: '/news'
 };
