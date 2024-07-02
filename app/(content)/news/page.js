@@ -1,14 +1,24 @@
-'use client';
-
 import Link from "next/link";
 
-import { useEffect, useState } from "react";
+// import { useEffect, useState } from "react";
 import { DUMMY_NEWS } from "@/dummy-news";
 import NewsList from "@/components/news/news-list";
 
-export default function NewsPage() {
-  // je desire actuellement afficher les donnees de la BD (backend separe) au lieu de les afficher directement comme fait ci-dessus avec DUMMY_NEWS
+export default async function NewsPage() {
+  /*
+    je desire actuellement afficher les donnees de la BD (backend separe) au lieu de les afficher directement comme fait ci-dessus avec DUMMY_NEWS
 
+    option 1 :
+        utiliser le hook useEffect pour fetcher les donnees de la BD (client-side data fetching)
+
+    option 2 : meilleur option avec Next.js
+        utiliser la fonction fetch directement dans le composant pour fetcher les donnees de la BD (server-side data fetching)
+        on utilise directement le async sur le composant NewsPage
+        et on enleve le hook useEffect et le use client
+  */
+
+  /*
+  // option 1 : client-side data fetching
   // pour gerer le chargement des donnees de la BD
   const [isLoading, setIsLoading] = useState(false);
 
@@ -50,6 +60,19 @@ export default function NewsPage() {
   if (news) {
     newsContent = <NewsList news={news} />;
   }
+  */
+
+   // option 2 : server-side data fetching
+
+  const response = await fetch("http://localhost:8088/news");
+
+  // verifier si la requete a echoue
+  if (!response.ok) {
+    throw new Error("Failed to fetch news!");
+  }
+
+  // lire et convertir la reponse en objet javascript
+  const news = await response.json(); 
 
   return (
     <>
@@ -91,8 +114,11 @@ export default function NewsPage() {
       */}
       {/* <NewsList news={DUMMY_NEWS} /> */}
 
-      {/* Methode #4 : afficher les donnees de la BD (backend separe) */}
-      {newsContent}
+      {/* Methode #4 : option 1 : afficher les donnees de la BD (backend separe) */}
+      {/* {newsContent} */}
+
+       {/* Methode #4 : option 2 : afficher les donnees de la BD (backend separe) */}
+      <NewsList news={news} />
     </>
   );
 }
