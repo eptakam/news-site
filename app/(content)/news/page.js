@@ -3,6 +3,7 @@ import Link from "next/link";
 // import { useEffect, useState } from "react";
 import { DUMMY_NEWS } from "@/dummy-news";
 import NewsList from "@/components/news/news-list";
+import { getAllNews } from "@/lib/news";
 
 export default async function NewsPage() {
   /*
@@ -15,6 +16,15 @@ export default async function NewsPage() {
         utiliser la fonction fetch directement dans le composant pour fetcher les donnees de la BD (server-side data fetching)
         on utilise directement le async sur le composant NewsPage
         et on enleve le hook useEffect et le use client
+
+    option 3 : 
+        pourquoi utiliser un backend separe pour fetcher les donnees de la BD alors que nous pouvons le faire directement a partir de la source (BD)
+
+        pour cela, nous allons retirer le fichier data.db (BD physique) et le placer directement dans notre projet
+
+        puis executer 'npm install better-sqlite3' pour installer toutes les despendances necessaires pour interagir avec la BD
+
+        dans le fichier 'lib/news.js' import sql de 'better-sqlite3'  et se connecter a la BD avec 'const db = sql('data.db');'
   */
 
   /*
@@ -64,15 +74,19 @@ export default async function NewsPage() {
 
    // option 2 : server-side data fetching
 
-  const response = await fetch("http://localhost:8088/news");
+  // const response = await fetch("http://localhost:8088/news");
 
-  // verifier si la requete a echoue
-  if (!response.ok) {
-    throw new Error("Failed to fetch news!");
-  }
+  // // verifier si la requete a echoue
+  // if (!response.ok) {
+  //   throw new Error("Failed to fetch news!");
+  // }
 
-  // lire et convertir la reponse en objet javascript
-  const news = await response.json(); 
+  // // lire et convertir la reponse en objet javascript
+  // const news = await response.json(); 
+
+  // option 3 : fetcher les donnees de la BD directement
+  const news = getAllNews(); // appeler la fonction getAllNews() de '../lib/news.js' pour fetcher les donnees de la BD
+  
 
   return (
     <>
