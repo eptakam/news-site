@@ -12,7 +12,14 @@
     il ne faut pas perdre de vue que /@modal/(.)image/page.js ne pour etre affichee que si une url d'image est interceptee, ce n'est qu'a ce moment que nous ouvrirons le modal.
     Pour rendre cela fonctionnel, il faut ajouter un fichier page.js ou default.js a l'exterieur du dossier d'interception /@modal/(.)image/  cad /@modal/page.js ou /@modal/default.js 
 
+    au cas ou il y a une erreur lorsqu'on fait le refresh de l'image, il faut utiliser default.js a la place de page.js
+
     bien garder a l'esprit que le layout est un composant client et que les pages interceptees sont des composants client. donc, il faudra importer les composants client dans le layout pour qu'ils soient affiches
+
+    note: 
+      si l'on veut retourner a la page precedente, en cliquant sur le background du modal, il faut ajouter un event listener sur le background du modal pour fermer le modal cad au niveau du composant client intercepte 'InterceptedImagePage' qui est dans le dossier 'news/[slug]/@modal/(.)image' et non dans le layout.
+
+      cela est appele 'navigation programmatique' et est possible grace au hook 'useRouter' de next/navigation
 */
 
 export default function NewsDetailLayouta({ children, modal }) {

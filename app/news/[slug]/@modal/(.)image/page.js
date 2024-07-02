@@ -10,11 +10,15 @@
 
     pour resoudre ce probleme, nous allons creer un fichier layout.js dans le dossier components. car c'est le layout qui determine comment les pages sont affichees.
 */
+"use client";
 
-import { notFound } from "next/navigation";
+import { notFound, useRouter } from "next/navigation";
 import { DUMMY_NEWS } from "@/dummy-news";
 
 export default function InterceptedImagePage({ params }) {
+  // permettre la naviguation a la page precedente par le clique sur le background du modal (la div qui la contient)
+  const router = useRouter(); // ne fonctionne que dans un composant client
+
   const newsItemSlug = params.slug; // on recupere le slug (le path) de l'article de presse
 
   // identify the news item that we want to display
@@ -31,7 +35,8 @@ export default function InterceptedImagePage({ params }) {
 
   return (
     <>
-      <div className="modal-backdrop" />
+    {/* onClick={router.back} : permet de retourner a la page precedente en cliquant sur le background du modal */}
+      <div className="modal-backdrop" onClick={router.back} />
       <dialog className="modal" open>
         <div className="fullscreen-image">
           <img src={`/images/news/${newsItem.image}`} alt={newsItem.title} />
