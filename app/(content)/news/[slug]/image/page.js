@@ -9,15 +9,21 @@
 
 import { notFound } from "next/navigation";
 import { DUMMY_NEWS } from "@/dummy-news";
+import { getNewsItem } from "@/lib/news"; // import de la fonction getNewsItem() pour recuperer un article de presse en fonction de son slug
 
 
-export default function ImagePage({ params }) {
+export default async function ImagePage({ params }) {
   const newsItemSlug = params.slug; // on recupere le slug (le path) de l'article de presse
 
   // identify the news item that we want to display
   // we use the .find() method to find the news item with the matching slug
   // newsItem : represent one news item (one object) from the DUMMY_NEWS array
-  const newsItem = DUMMY_NEWS.find((newsItem) => newsItem.slug === newsItemSlug);
+
+  // utilisation des donnees provenant du fichier dummy-news.js
+  // const newsItem = DUMMY_NEWS.find((newsItem) => newsItem.slug === newsItemSlug);
+
+  // utilisation des donnees provenant de la BD
+  const newsItem = await getNewsItem(newsItemSlug);
 
   // if the news item does not exist, we display the NewsNotFoundPage. to do that, we'll use the notFound() function from next/navigation that will call the NewsNotFoundPage component because it's in the same folder as this file and has not-found.js as its filename.
   if (!newsItem) {

@@ -203,3 +203,18 @@ ul {
   height: 100%;
   object-fit: contain;
 }
+
+@keyframes fadeInOut {
+  0%, 100% { 
+    opacity: 0; 
+    visibility: hidden;
+  }
+  50% { 
+    opacity: 1; 
+    visibility: visible;
+  }
+}
+
+#p-loading {
+  animation: fadeInOut 2s infinite;
+}

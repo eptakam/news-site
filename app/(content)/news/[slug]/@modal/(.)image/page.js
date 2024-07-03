@@ -10,23 +10,31 @@
 
     pour resoudre ce probleme, nous allons creer un fichier layout.js dans le dossier components. car c'est le layout qui determine comment les pages sont affichees.
 */
-"use client";
 
-import { notFound, useRouter } from "next/navigation";
-import { DUMMY_NEWS } from "@/dummy-news";
+import { notFound } from "next/navigation";
+// import { DUMMY_NEWS } from "@/dummy-news";
+import ModalBackdrop from "@/components/modal/modal-backdrop";
+import { getNewsItem } from "@/lib/news";
 
-export default function InterceptedImagePage({ params }) {
+export default async function InterceptedImagePage({ params }) {
   // permettre la naviguation a la page precedente par le clique sur le background du modal (la div qui la contient)
-  const router = useRouter(); // ne fonctionne que dans un composant client
 
   const newsItemSlug = params.slug; // on recupere le slug (le path) de l'article de presse
 
   // identify the news item that we want to display
   // we use the .find() method to find the news item with the matching slug
   // newsItem : represent one news item (one object) from the DUMMY_NEWS array
-  const newsItem = DUMMY_NEWS.find(
-    (newsItem) => newsItem.slug === newsItemSlug
-  );
+
+  // utilisation des donnees provenant du fichier dummy-news.js
+  // const newsItem = DUMMY_NEWS.find(
+  //   (newsItem) => newsItem.slug === newsItemSlug
+  // );
+
+  // utilisation des donnees provenant de la BD
+  // ce sera un peu different ici car nous utilisont 'use client' et que nous ne pouvons pas utiliser les fonctions asynchrones sur un composant client. nous allons donc extraire la div ayant pour classe 'modal-backdrop' car c'est elle qui nous oblige a rendre les composants en composant client a cause de l'evenement onClick={router.back} qui est un evenement client. et de cette facon, le reste des composants seront rendus en composant server.
+
+  // donc nous allons creer un nouveau composant qui va contenir la div ayant pour classe 'modal-backdrop' et qui va appeler le composant InterceptedImagePage. ce composant sera nomme ModalBackdrop et sera dans le dossier components.
+  const newsItem = await getNewsItem(newsItemSlug);
 
   // if the news item does not exist, we display the NewsNotFoundPage. to do that, we'll use the notFound() function from next/navigation that will call the NewsNotFoundPage component because it's in the same folder as this file and has not-found.js as its filename.
   if (!newsItem) {
@@ -35,8 +43,8 @@ export default function InterceptedImagePage({ params }) {
 
   return (
     <>
-    {/* onClick={router.back} : permet de retourner a la page precedente en cliquant sur le background du modal */}
-      <div className="modal-backdrop" onClick={router.back} />
+      {/* <ModalBackdrop /> : permet de retourner a la page precedente en cliquant sur le background du modal */}
+      <ModalBackdrop />
       <dialog className="modal" open>
         <div className="fullscreen-image">
           <img src={`/images/news/${newsItem.image}`} alt={newsItem.title} />
